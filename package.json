@@ -1,0 +1,11 @@
+{
+  "name": "generative",
+  "version": "1.0.0",
+  "description": "HTML generator allowing encapsulation of javascript and css",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
