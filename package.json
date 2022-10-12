@@ -1,11 +1,18 @@
 {
-  "name": "generative",
-  "version": "1.0.0",
-  "description": "HTML generator allowing encapsulation of javascript and css",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "generative",
+    "version": "1.0.0",
+    "description": "HTML generator allowing encapsulation of javascript and css",
+    "main": "generative.js",
+    "scripts": {
+        "test": "jest --silent"
+    },
+    "author": "",
+    "license": "ISC",
+    "bin": {
+        "generative": "./cli.js"
+    },
+    "devDependencies": {
+        "jest": "^29.1.2",
+        "tmp": "^0.2.1"
+    }
 }
