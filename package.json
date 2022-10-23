@@ -4,7 +4,7 @@
     "description": "HTML generator allowing encapsulation of javascript and css",
     "main": "generative.js",
     "scripts": {
-        "test": "jest --silent"
+        "test": "jshint src && jest --silent"
     },
     "author": "",
     "license": "ISC",
@@ -13,6 +13,7 @@
     },
     "devDependencies": {
         "jest": "^29.1.2",
+        "jshint": "^2.13.5",
         "tmp": "^0.2.1"
     },
     "dependencies": {

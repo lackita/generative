@@ -11,7 +11,7 @@ test('creates a .gitignore file', () => {
 
 test('appends to an existing .gitignore file', () => {
   setUpTestDir();
-  fs.writeFileSync('.gitignore', '.foo')
+  fs.writeFileSync('.gitignore', '.foo');
   init();
   expectFileToContain('.gitignore', /_site\n/);
   expectFileToContain('.gitignore', /.foo\n/);
@@ -33,7 +33,7 @@ test('uses existing pages directory', () => {
 test('leaves existing pages/index.ghtml alone', () => {
   setUpTestDir();
   fs.mkdirSync('pages');
-  fs.writeFileSync('pages/index.ghtml', '<p>foo</p>')
+  fs.writeFileSync('pages/index.ghtml', '<p>foo</p>');
   init();
   expectFileToContain('pages/index.ghtml', /foo/);
 });
