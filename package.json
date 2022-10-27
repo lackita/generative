@@ -4,12 +4,12 @@
     "description": "HTML generator allowing encapsulation of javascript and css",
     "main": "generative.js",
     "scripts": {
-        "test": "jshint src && jest --silent"
+        "test": "jshint src/ test/ && jest --silent"
     },
     "author": "",
     "license": "ISC",
     "bin": {
-        "generative": "./cli.js"
+        "generative": "./src/cli/cli.js"
     },
     "devDependencies": {
         "jest": "^29.1.2",

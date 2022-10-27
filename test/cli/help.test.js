@@ -1,4 +1,4 @@
-const help = require('./help.js');
+const help = require('../../src/cli/help.js');
 
 test('includes unknown command', () => {
   let message;
