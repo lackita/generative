@@ -2,19 +2,23 @@ const fs = require('fs');
 const build = require('../../src/cli/build.js');
 const testdir = require('./testdir.js');
 
-test('empty director', () => {
-  testdir({'pages': []});
+test('empty directories', () => {
+  testdir({'components': [], 'pages': []});
   build();
 });
 
 test('parses pages', () => {
-  testdir({'pages': {'foo.ghtml': '<div>foo</div>'}});
+  testdir({
+    'components': [],
+    'pages': {'foo.ghtml': '<div>foo</div>'},
+  });
   build();
   expect(fs.existsSync('_site/foo.html')).toBeTruthy();
 });
 
 test('clears existing directory', () => {
   testdir({
+    'components': [],
     'pages': {'foo.ghtml': '<div>foo</div>'},
     '_site': {'bar.html': 'bad'},
   });
@@ -23,13 +27,16 @@ test('clears existing directory', () => {
 });
 
 test('does not create files which are not ghtml', () => {
-  testdir({'pages': {'foo.html': 'hi'}});
+  testdir({'components': [], 'pages': {'foo.html': 'hi'}});
   build();
   expect(fs.existsSync('_site/foo.html')).toBeFalsy();
 });
 
 test('creates a subdirectory with a file', () => {
-  testdir({'pages': {'foo': {'bar.ghtml': 'hi'}}});
+  testdir({
+    'components': [],
+    'pages': {'foo': {'bar.ghtml': 'hi'}},
+  });
   build();
   expect(fs.existsSync('_site/foo/bar.html')).toBeTruthy();
 });

@@ -1,20 +1,17 @@
 const fs = require('fs');
 const path = require('path');
-const {Parser, Builder} = require('./parser.js');
+const {Builder} = require('./parser.js');
 const {Element, Doctype} = require('./element.js');
+const File = require('./file.js');
 
-const parser = new Parser();
 const builder = new Builder();
-const ghtml_re = /^(.*)[.]ghtml$/;
 
-class Page {
-  constructor(root, path, file) {
-    this.root = root;
-    this.path = path;
-    this.file = file;
+class Page extends File {
+  html(env) {
+    return builder.build(this.converted_tree(env));
   }
 
-  converted_tree() {
+  converted_tree(env) {
     return [
       new Doctype('html'),
       new Element(
@@ -24,16 +21,14 @@ class Page {
     ];
   }
 
-  parsed_file() {
-    return parser.parse(this.raw_file());
-  }
-
-  raw_file() {
-    return fs.readFileSync(this.source_path(), 'utf8');
-  }
-
-  source_path() {
-    return path.join(this.root, ...this.path, this.file);
+  build(env, destination) {
+    let match = this.is_generative();
+    if(match) {
+      fs.writeFileSync(
+        this.destination_path(destination),
+        this.html(env),
+      );
+    }
   }
 
   destination_path(destination) {
@@ -41,24 +36,6 @@ class Page {
     if (!match) throw `${this.source_path()} is not a generative file`;
 
     return path.join(destination, ...this.path, `${match[1]}.html`);
-  }
-
-  build(destination) {
-    let match = this.is_generative();
-    if(match) {
-      fs.writeFileSync(
-        this.destination_path(destination),
-        this.html(),
-      );
-    }
-  }
-
-  is_generative() {
-    return this.file.match(ghtml_re);
-  }
-
-  html() {
-    return builder.build(this.converted_tree());
   }
 }
 

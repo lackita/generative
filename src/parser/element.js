@@ -26,6 +26,12 @@ class Element {
     return this._children;
   }
 
+  value() {
+    if(this.children.length != 1) throw 'More than a single child';
+    if(!(this.children[0] instanceof Text)) throw "child isn't just text";
+    return this.children[0].value;
+  }
+
   fxp_element() {
     return {[this.tag]: this.children.map((e) => e.fxp_element())};
   }

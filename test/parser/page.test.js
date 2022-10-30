@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Page = require("../../src/parser/page.js");
+const Environment = require("../../src/transform/environment.js");
 const testdir = require("../cli/testdir.js");
 
 describe('build', () => {
@@ -10,7 +11,7 @@ describe('build', () => {
       '_site': [],
     });
     let page = new Page('pages', [], 'foo.ghtml');
-    page.build('_site');
+    page.build(new Environment(), '_site');
     expect(fs.existsSync(path.join('_site', 'foo.html'))).toBeTruthy();
   });
 });
