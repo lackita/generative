@@ -1,18 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const Parser = require('./parser.js');
-const {XMLBuilder} = require('fast-xml-parser');
+const {Parser, Builder} = require('./parser.js');
+const {Element, Doctype} = require('./element.js');
 
-const options = {
-  isArray: (name) => name == 'define',
-  ignoreAttributes: false,
-  preserveOrder: true,
-  unpairedTags: ['br'],
-  alwaysCreateTextNode: true,
-};
-
-const builder = new XMLBuilder(options);
 const parser = new Parser();
+const builder = new Builder();
 const ghtml_re = /^(.*)[.]ghtml$/;
 
 class Page {
@@ -22,8 +14,22 @@ class Page {
     this.file = file;
   }
 
+  converted_tree() {
+    return [
+      new Doctype('html'),
+      new Element(
+        'html',
+        [new Element('body', this.parsed_file().children)],
+      ),
+    ];
+  }
+
   parsed_file() {
-    return parser.parse(fs.readFileSync(this.source_path()));
+    return parser.parse(this.raw_file());
+  }
+
+  raw_file() {
+    return fs.readFileSync(this.source_path(), 'utf8');
   }
 
   source_path() {
@@ -42,13 +48,17 @@ class Page {
     if(match) {
       fs.writeFileSync(
         this.destination_path(destination),
-        builder.build(this.parsed_file()),
+        this.html(),
       );
     }
   }
 
   is_generative() {
     return this.file.match(ghtml_re);
+  }
+
+  html() {
+    return builder.build(this.converted_tree());
   }
 }
 

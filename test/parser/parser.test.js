@@ -1,4 +1,4 @@
-const Parser = require('../../src/parser/parser.js');
+const {Parser} = require('../../src/parser/parser.js');
 
 let p = new Parser();
 
@@ -19,14 +19,14 @@ describe('Parser', () => {
   });
 
   test('parses a text attribute', () => {
-    let t = p.parse('x').children[0];
-    expect(t.value).toBe('x');
+    let t = p.parse('foo', true).children[0];
+    expect(t.value).toBe('foo');
   });
 });
 
 describe('Element', () => {
   test('finds a child', () => {
-    let tree = p.parse('<div><p>a</p></div>');
-    expect(tree.find('p').children[0].value).toBe('a');
+    let tree = p.parse('<div><p>hi</p></div>', true);
+    expect(tree.find('p').children[0].value).toBe('hi');
   });
 });

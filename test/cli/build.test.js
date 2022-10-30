@@ -2,6 +2,11 @@ const fs = require('fs');
 const build = require('../../src/cli/build.js');
 const testdir = require('./testdir.js');
 
+test('empty director', () => {
+  testdir({'pages': []});
+  build();
+});
+
 test('parses pages', () => {
   testdir({'pages': {'foo.ghtml': '<div>foo</div>'}});
   build();
