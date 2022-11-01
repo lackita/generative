@@ -7,19 +7,19 @@ class Environment {
     return this.symbols.get(symbol);
   }
 
-  register(symbol, pattern) {
-    this.symbols.set(symbol, pattern);
+  register(object) {
+    this.symbols.set(object.name, object);
   }
 
   merge(env) {
     let new_env = env.clone();
-    this.symbols.forEach((v, k) => new_env.register(k, v));
+    this.symbols.forEach((v) => new_env.register(v));
     return new_env;
   }
 
   clone() {
     let env = new Environment();
-    this.symbols.forEach((v, k) => env.register(k, v));
+    this.symbols.forEach((v) => env.register(v));
     return env;
   }
 }

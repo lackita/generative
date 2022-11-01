@@ -23,10 +23,3 @@ describe('Parser', () => {
     expect(t.value).toBe('foo');
   });
 });
-
-describe('Element', () => {
-  test('finds a child', () => {
-    let tree = p.parse('<div><p>hi</p></div>', true);
-    expect(tree.find('p').children[0].value).toBe('hi');
-  });
-});

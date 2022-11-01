@@ -5,13 +5,24 @@ class Element {
     this._attributes = attributes;
   }
 
-  find(tag) {
-    if(this.tag == tag) return this;
-
-    return this.children.reduce(
-      (found, c) => found || c.find(tag),
-      null,
+  clone() {
+    return new this.constructor(
+      this.tag,
+      this.children.map((e) => e.clone()),
+      this.attributes,
     );
+  }
+
+  childless_clone() {
+    return new this.constructor(this.tag, [], this.attributes);
+  }
+
+  add_child(child) {
+    this.children.push(child);
+  }
+
+  find(tag) {
+    return this.children.find((e) => e.tag == tag);
   }
 
   get tag() {
@@ -43,6 +54,14 @@ class Doctype extends Element {
     this._declaration = declaration;
   }
 
+  childless_clone() {
+    return this.clone();
+  }
+
+  clone() {
+    return new this.constructor(this.declaration);
+  }
+
   get declaration() {
     return this._declaration;
   }
@@ -56,6 +75,14 @@ class Text extends Element {
   constructor(value) {
     super('#text', []);
     this._value = value;
+  }
+
+  childless_clone() {
+    return this.clone();
+  }
+
+  clone() {
+    return new this.constructor(this.value);
   }
 
   get value() {

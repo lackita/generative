@@ -1,22 +1,39 @@
 const Environment = require('./environment.js');
 const Pattern = require('./pattern.js');
+const {Element} = require('../parser/element.js');
 
-function evaluate(parse_tree, debug) {
-  let env = new Environment();
+function evaluate(parse_tree, env) {
+  let transformed_tree;
+  let pattern = env.lookup(parse_tree.tag);
+  if(pattern) {
+    transformed_tree = new Element(pattern.base, {'class': pattern.name});
+    pattern.html.forEach((e) => {
+      transformed_tree.add_child(e.clone());
+    });
+  } else {
+    transformed_tree = parse_tree.childless_clone();
+    if(parse_tree.tag == 'define') {
+      define(env, parse_tree);
+      transformed_tree = parse_tree;
+    } else {
+      parse_tree.children.forEach((e) => {
+        let r = evaluate(e, env);
+        transformed_tree.add_child(r[0]);
+        env = env.merge(r[1]);
+      });
+    }
+  }
 
-  if(parse_tree.tag == 'define')
-    define(env, parse_tree, debug);
-  else
-    env = parse_tree.children.reduce((env, c) => {
-      return env.merge(evaluate(c, debug + 1));
-    }, env);
-
-  return env;
+  return [transformed_tree, env];
 }
 
-function define(env, parse_tree, debug) {
-  let pattern = new Pattern(parse_tree);
-  env.register(pattern.name, pattern);
+function define(env, parse_tree) {
+  let pattern = new Pattern(
+    parse_tree.find('name').value(),
+    parse_tree.find('base').value(),
+    parse_tree.find('html').children,
+  );
+  env.register(pattern);
 }
 
 module.exports = evaluate;
