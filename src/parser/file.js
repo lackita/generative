@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const {Parser, Builder} = require('./parser.js');
+const evaluate = require('../transform/evaluate.js');
 
 const parser = new Parser();
 const ghtml_re = /^(.*)[.]ghtml$/;

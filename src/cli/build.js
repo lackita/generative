@@ -18,7 +18,7 @@ function parse_dir(root, directories) {
     if(is_directory(path.join(root, ...directories, file))) {
       return parse_dir(root, directories.concat(file));
     } else {
-      return env.merge(evaluate(new File(root, directories, file)));
+      return evaluate(new File(root, directories, file).parsed_file(), env);
     }
   }, new Environment());
 }

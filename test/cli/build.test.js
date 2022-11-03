@@ -40,3 +40,13 @@ test('creates a subdirectory with a file', () => {
   build();
   expect(fs.existsSync('_site/foo/bar.html')).toBeTruthy();
 });
+
+test('builds a component', () => {
+  testdir({
+    'components': {
+      'foo.ghtml': '<define><name>foo</name><base>div</base><html>bar</html></define>',
+    },
+    'pages': {'index.ghtml': '<foo />'},
+  });
+  build();
+});

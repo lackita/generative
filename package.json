@@ -1,6 +1,6 @@
 {
     "name": "generative",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "HTML generator allowing encapsulation of javascript and css",
     "main": "generative.js",
     "scripts": {
