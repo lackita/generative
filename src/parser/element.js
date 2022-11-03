@@ -1,5 +1,5 @@
 class Element {
-  constructor(tag, children, attributes) {
+  constructor(tag, attributes, children) {
     this._tag = tag;
     this._children = children || [];
     this._attributes = attributes;
@@ -14,7 +14,7 @@ class Element {
   }
 
   childless_clone() {
-    return new this.constructor(this.tag, [], this.attributes);
+    return new this.constructor(this.tag, this.attributes, []);
   }
 
   add_child(child) {
@@ -73,7 +73,7 @@ class Doctype extends Element {
 
 class Text extends Element {
   constructor(value) {
-    super('#text', []);
+    super('#text');
     this._value = value;
   }
 

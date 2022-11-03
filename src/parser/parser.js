@@ -35,8 +35,8 @@ class Parser {
     } else {
       return new Element(
         components.tag,
-        this.parse_elements(components.children, debug),
         components.attributes,
+        this.parse_elements(components.children, debug),
       );
     }
   }

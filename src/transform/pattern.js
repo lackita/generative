@@ -1,3 +1,5 @@
+const {Element} = require('../parser/element.js');
+
 class Pattern {
   constructor(name, base, html) {
     this._html = html;
@@ -15,6 +17,24 @@ class Pattern {
 
   get html() {
     return this._html;
+  }
+
+  build_from(parse_tree) {
+    let transformed_tree = new Element(this.base, {
+      'class': this.name,
+    });
+
+    this.html.forEach((e) => {
+      if(e.tag == 'children') {
+        parse_tree.children.forEach((c) => {
+          transformed_tree.add_child(c.clone());
+        });
+      } else {
+        transformed_tree.add_child(e.clone());
+      }
+    });
+
+    return transformed_tree;
   }
 }
 

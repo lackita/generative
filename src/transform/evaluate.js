@@ -1,15 +1,11 @@
 const Environment = require('./environment.js');
 const Pattern = require('./pattern.js');
-const {Element} = require('../parser/element.js');
 
 function evaluate(parse_tree, env) {
   let transformed_tree;
   let pattern = env.lookup(parse_tree.tag);
   if(pattern) {
-    transformed_tree = new Element(pattern.base, {'class': pattern.name});
-    pattern.html.forEach((e) => {
-      transformed_tree.add_child(e.clone());
-    });
+    transformed_tree = pattern.build_from(parse_tree);
   } else {
     transformed_tree = parse_tree.childless_clone();
     if(parse_tree.tag == 'define') {

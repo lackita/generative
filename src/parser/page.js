@@ -16,7 +16,8 @@ class Page extends File {
       new Doctype('html'),
       new Element(
         'html',
-        [new Element('body', this.parsed_file().children)],
+        {},
+        [new Element('body', {}, this.parsed_file().children)],
       ),
     ];
   }
