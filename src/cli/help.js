@@ -1,11 +1,13 @@
-function help(command) {
-  let unknown_message = '';
-  if(command != 'help') {
-    unknown_message = `Unknown command: ${command}
+'use strict';
+
+function help (command) {
+  let unknownMessage = '';
+  if (command !== 'help') {
+    unknownMessage = `Unknown command: ${command}
 `;
   }
   console.log(`Generative - Building Clean Web Abstractions
-${unknown_message}
+${unknownMessage}
 Commands:
 help - print this message
 init - make the current directory a generative project`);

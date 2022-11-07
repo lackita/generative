@@ -1,20 +1,19 @@
 #!/usr/bin/env node
 
+'use strict';
+
 const Args = require('./arguments.js');
 
-let args = new Args(process.argv);
+const args = new Args(process.argv);
 
-switch(args.command()) {
-case 'init':
-    let init = require('./init.js');
-    init();
+switch (args.command()) {
+  case 'init':
+    require('./init.js')();
     break;
-case 'build':
-    let build = require('./build.js');
-    build();
+  case 'build':
+    require('./build.js')();
     break;
-default:
-    let help = require('./help.js');
-    help(args.command());
+  default:
+    require('./help.js')(args.command());
     break;
 }

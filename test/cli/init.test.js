@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs');
 const init = require('../../src/cli/init.js');
 const testdir = require('./testdir.js');
@@ -9,7 +11,7 @@ test('creates a .gitignore file', () => {
 });
 
 test('appends to an existing .gitignore file', () => {
-  testdir({'.gitignore': '.foo'});
+  testdir({ '.gitignore': '.foo' });
   init();
   expectFileToContain('.gitignore', /_site\n/);
   expectFileToContain('.gitignore', /.foo\n/);
@@ -22,13 +24,13 @@ test('creates pages/index.ghtml', () => {
 });
 
 test('uses existing pages directory', () => {
-  testdir({'pages': {}});
+  testdir({ pages: {} });
   init();
   expectFileToContain('pages/index.ghtml', /<introduction>/);
 });
 
 test('leaves existing pages/index.ghtml alone', () => {
-  testdir({'pages': {'index.ghtml': '<p>foo</p>'}});
+  testdir({ pages: { 'index.ghtml': '<p>foo</p>' } });
   init();
   expectFileToContain('pages/index.ghtml', /foo/);
 });
@@ -39,9 +41,9 @@ test('creates components/introduction.ghtml', () => {
   expectFileToContain('components/introduction.ghtml', /<define>/);
 });
 
-function expectFileToContain(file, pattern) {
+function expectFileToContain (file, pattern) {
   fs.readFile(file, 'utf8', (err, data) => {
-    if(err) {
+    if (err) {
       throw err;
     }
 

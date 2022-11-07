@@ -1,4 +1,6 @@
-function Arguments(argv) {
+'use strict';
+
+function Arguments (argv) {
   this.argv = argv;
   this.command = () => argv[2];
 }

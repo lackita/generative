@@ -1,40 +1,33 @@
-const {Element} = require('../parser/element.js');
+'use strict';
+
+const { Map } = require('immutable');
+const { Element } = require('../parser/element.js');
 
 class Pattern {
-  constructor(name, base, html) {
+  constructor (name, base, html) {
     this._html = html;
     this._base = base;
     this._name = name;
   }
 
-  get name() {
+  get name () {
     return this._name;
   }
 
-  get base() {
+  get base () {
     return this._base;
   }
 
-  get html() {
+  get html () {
     return this._html;
   }
 
-  build_from(parse_tree) {
-    let transformed_tree = new Element(this.base, {
-      'class': this.name,
-    });
+  buildFrom (parseTree) {
+    const children = [];
+    this.html.forEach((e) => children.push(e.clone()));
 
-    this.html.forEach((e) => {
-      if(e.tag == 'children') {
-        parse_tree.children.forEach((c) => {
-          transformed_tree.add_child(c.clone());
-        });
-      } else {
-        transformed_tree.add_child(e.clone());
-      }
-    });
-
-    return transformed_tree;
+    const transformedTree = new Element(this.base, new Map([['class', this.name]]), children);
+    return transformedTree;
   }
 }
 

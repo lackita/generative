@@ -1,35 +1,44 @@
-const Environment = require('./environment.js');
+'use strict';
+
 const Pattern = require('./pattern.js');
 
-function evaluate(parse_tree, env) {
-  let transformed_tree;
-  let pattern = env.lookup(parse_tree.tag);
-  if(pattern) {
-    transformed_tree = pattern.build_from(parse_tree);
+function evaluate (parseTree, env) {
+  let transformedTree;
+  const pattern = env.lookup(parseTree.tag);
+  if (pattern) {
+    transformedTree = evaluate(
+      pattern.buildFrom(parseTree, env),
+      env.register(new Pattern(
+        'children',
+        'div',
+        parseTree.children,
+      )),
+    )[0];
   } else {
-    transformed_tree = parse_tree.childless_clone();
-    if(parse_tree.tag == 'define') {
-      define(env, parse_tree);
-      transformed_tree = parse_tree;
+    const children = [];
+    if (parseTree.tag === 'define') {
+      env = define(env, parseTree);
+      transformedTree = parseTree;
     } else {
-      parse_tree.children.forEach((e) => {
-        let r = evaluate(e, env);
-        transformed_tree.add_child(r[0]);
+      parseTree.children.forEach((e) => {
+        const r = evaluate(e, env);
+        children.push(r[0]);
         env = env.merge(r[1]);
       });
+      transformedTree = parseTree.clone({ children });
     }
   }
 
-  return [transformed_tree, env];
+  return [transformedTree, env];
 }
 
-function define(env, parse_tree) {
-  let pattern = new Pattern(
-    parse_tree.find('name').value(),
-    parse_tree.find('base').value(),
-    parse_tree.find('html').children,
+function define (env, parseTree) {
+  const pattern = new Pattern(
+    parseTree.find('name').value(),
+    parseTree.find('base').value(),
+    parseTree.find('html').children,
   );
-  env.register(pattern);
+  return env.register(pattern);
 }
 
 module.exports = evaluate;

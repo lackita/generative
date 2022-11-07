@@ -1,26 +1,22 @@
+'use strict';
+
+const { Map } = require('immutable');
+
 class Environment {
-  constructor() {
-    this.symbols = new Map();
+  constructor (values) {
+    this.symbols = new Map(values);
   }
 
-  lookup(symbol) {
+  lookup (symbol) {
     return this.symbols.get(symbol);
   }
 
-  register(object) {
-    this.symbols.set(object.name, object);
+  register (object) {
+    return this.merge(new Environment(new Map([[object.name, object]])));
   }
 
-  merge(env) {
-    let new_env = env.clone();
-    this.symbols.forEach((v) => new_env.register(v));
-    return new_env;
-  }
-
-  clone() {
-    let env = new Environment();
-    this.symbols.forEach((v) => env.register(v));
-    return env;
+  merge (env) {
+    return new Environment(this.symbols.merge(env.symbols));
   }
 }
 

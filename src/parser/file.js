@@ -1,32 +1,33 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
-const {Parser, Builder} = require('./parser.js');
-const evaluate = require('../transform/evaluate.js');
+const { Parser } = require('./parser.js');
 
 const parser = new Parser();
-const ghtml_re = /^(.*)[.]ghtml$/;
+const ghtmlRegexp = /^(.*)[.]ghtml$/;
 
 class File {
-  constructor(root, path, file) {
+  constructor (root, path, file) {
     this.root = root;
     this.path = path;
     this.file = file;
   }
 
-  parsed_file() {
+  parsed_file () {
     return parser.parse(this.raw_file());
   }
 
-  raw_file() {
+  raw_file () {
     return fs.readFileSync(this.source_path(), 'utf8');
   }
 
-  source_path() {
+  source_path () {
     return path.join(this.root, ...this.path, this.file);
   }
 
-  is_generative() {
-    return this.file.match(ghtml_re);
+  is_generative () {
+    return this.file.match(ghtmlRegexp);
   }
 }
 
