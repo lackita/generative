@@ -8,8 +8,9 @@ const options = {
   isArray: (name) => name === 'define',
   ignoreAttributes: false,
   preserveOrder: true,
-  unpairedTags: ['!DOCTYPE html', 'br'],
+  unpairedTags: ['!DOCTYPE html', 'br', 'input'],
   alwaysCreateTextNode: true,
+  processEntities: false,
 };
 
 const parser = new XMLParser(options);

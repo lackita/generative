@@ -1,9 +1,11 @@
 'use strict';
 
 const { Map } = require('immutable');
-const { Parser } = require('../../src/parser/parser.js');
+const { Parser, Builder } = require('../../src/parser/parser.js');
+const { Text } = require('../../src/parser/element.js');
 
 const p = new Parser();
+const b = new Builder();
 
 describe('Parser', () => {
   test('starts with a root', () => {
@@ -24,5 +26,15 @@ describe('Parser', () => {
   test('parses a text attribute', () => {
     const t = p.parse('foo', true).children[0];
     expect(t.value).toBe('foo');
+  });
+
+  test('preserves html entities', () => {
+    expect(p.parse('&check;').value()).toBe('&check;');
+  });
+});
+
+describe('Builder', () => {
+  test('preserves html entities', () => {
+    expect(b.build([new Text('&check;')])).toBe('&check;');
   });
 });
