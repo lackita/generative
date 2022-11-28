@@ -1,51 +1,59 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
 const { Map } = require('immutable');
 
 const { Builder } = require('./parser.js');
 const { Element, Doctype } = require('./element.js');
-const File = require('./file.js');
 const evaluate = require('../transform/evaluate.js');
 
 const builder = new Builder();
 
-class Page extends File {
+class Page {
+  constructor (parsedFile) {
+    this._parsedFile = parsedFile;
+  }
+
+  get parsedFile () {
+    return this._parsedFile;
+  }
+
   html (env) {
-    return builder.build(this.converted_tree(env));
+    const [evaluated, new_env] = this.converted_tree(env);
+    return [builder.build(evaluated), new_env];
   }
 
   converted_tree (env) {
+    const [evaluated, new_env] = evaluate(this.parsedFile, env);
     return [
-      new Doctype('html'),
-      new Element(
-        'html',
-        new Map(),
-        [new Element(
-          'body',
+      [
+        new Doctype('html'),
+        new Element(
+          'html',
           new Map(),
-          evaluate(this.parsed_file(), env)[0].children,
-        )],
-      ),
+          [
+            new Element(
+              'head',
+              new Map(),
+              [
+                new Element(
+                  'link',
+                  new Map({
+                    rel: 'stylesheet',
+                    href: 'stylesheet.css',
+                  }),
+                ),
+              ],
+            ),
+            new Element(
+              'body',
+              new Map(),
+              evaluated.children,
+            ),
+          ],
+        ),
+      ],
+      new_env,
     ];
-  }
-
-  build (env, destination) {
-    const match = this.is_generative();
-    if (match) {
-      fs.writeFileSync(
-        this.destination_path(destination),
-        this.html(env),
-      );
-    }
-  }
-
-  destination_path (destination) {
-    const match = this.is_generative();
-    if (!match) throw new Error(`${this.source_path()} is not a generative file`);
-
-    return path.join(destination, ...this.path, `${match[1]}.html`);
   }
 }
 

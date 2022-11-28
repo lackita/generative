@@ -8,27 +8,46 @@ const parser = new Parser();
 const ghtmlRegexp = /^(.*)[.]ghtml$/;
 
 class File {
-  constructor (root, path, file) {
+  constructor (root, directories, file) {
     this.root = root;
-    this.path = path;
+    this.directories = directories;
     this.file = file;
   }
 
-  parsed_file () {
-    return parser.parse(this.raw_file());
-  }
-
-  raw_file () {
-    return fs.readFileSync(this.source_path(), 'utf8');
-  }
-
-  source_path () {
-    return path.join(this.root, ...this.path, this.file);
-  }
-
-  is_generative () {
+  isGenerative () {
     return this.file.match(ghtmlRegexp);
+  }
+
+  path () {
+    return path.join(this.root, ...this.directories, this.file);
   }
 }
 
-module.exports = File;
+class SourceFile extends File {
+  parsed () {
+    return parser.parse(this.raw());
+  }
+
+  raw () {
+    return fs.readFileSync(this.path(), 'utf8');
+  }
+}
+
+class DestinationFile extends File {
+  static fromSource (destination, file) {
+    const match = file.isGenerative();
+    if (!match) throw new Error('not generative');
+
+    return new DestinationFile(
+      destination,
+      file.directories,
+      `${match[1]}.html`,
+    );
+  }
+
+  write (contents) {
+    fs.writeFileSync(this.path(), contents);
+  }
+}
+
+module.exports = { SourceFile, DestinationFile };

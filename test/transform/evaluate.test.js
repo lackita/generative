@@ -52,3 +52,11 @@ test('keeps any child values with the children tag', () => {
     ),
   );
 });
+
+test('does not have children as a registered pattern', () => {
+  const p = new Pattern('foo', 'div', [
+    new Element('children'),
+  ]);
+  const e = new Element('foo', new Map(), [new Text('bar')]);
+  expect(evaluate(e, new Environment().register(p))[1].lookup('children')).toBe(undefined);
+});

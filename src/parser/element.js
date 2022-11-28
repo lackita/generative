@@ -103,4 +103,15 @@ class Text extends Element {
   }
 }
 
-module.exports = { Element, Text, Doctype };
+class CSS extends Element {
+  constructor (rules) {
+    super('css');
+    this._rules = rules;
+  }
+
+  get rules () {
+    return this._rules;
+  }
+}
+
+module.exports = { Element, Text, Doctype, CSS };

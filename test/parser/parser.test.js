@@ -2,7 +2,8 @@
 
 const { Map } = require('immutable');
 const { Parser, Builder } = require('../../src/parser/parser.js');
-const { Text } = require('../../src/parser/element.js');
+const { Text, CSS } = require('../../src/parser/element.js');
+const { Rule, Declaration } = require('../../src/parser/css.js');
 
 const p = new Parser();
 const b = new Builder();
@@ -30,6 +31,15 @@ describe('Parser', () => {
 
   test('preserves html entities', () => {
     expect(p.parse('&check;').value()).toBe('&check;');
+  });
+
+  test('parses a css tag', () => {
+    expect(p.parse('<css>body { margin: 10px }</css>').children[0]).toStrictEqual(new CSS([
+      new Rule(
+        ['body'],
+        [new Declaration('margin', '10px')],
+      ),
+    ]));
   });
 });
 

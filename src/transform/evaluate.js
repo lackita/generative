@@ -6,14 +6,10 @@ function evaluate (parseTree, env) {
   let transformedTree;
   const pattern = env.lookup(parseTree.tag);
   if (pattern) {
-    transformedTree = evaluate(
-      pattern.buildFrom(parseTree, env),
-      env.register(new Pattern(
-        'children',
-        'div',
-        parseTree.children,
-      )),
-    )[0];
+    [transformedTree] = evaluate(
+      ...pattern.mutate(parseTree, env),
+    );
+    env = env.addAllCSS(pattern.scopedCSS());
   } else {
     const children = [];
     if (parseTree.tag === 'define') {
@@ -33,12 +29,7 @@ function evaluate (parseTree, env) {
 }
 
 function define (env, parseTree) {
-  const pattern = new Pattern(
-    parseTree.find('name').value(),
-    parseTree.find('base').value(),
-    parseTree.find('html').children,
-  );
-  return env.register(pattern);
+  return env.register(Pattern.buildFrom(parseTree));
 }
 
 module.exports = evaluate;

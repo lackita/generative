@@ -51,5 +51,16 @@ test('builds a component', () => {
     pages: { 'index.ghtml': '<foo />' },
   });
   build();
-  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><body><div class="foo">bar</div></body></html>');
+  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body><div class="foo">bar</div></body></html>');
+});
+
+it('creates a stylesheet if any component rules exist', () => {
+  testdir({
+    components: { 'foo.ghtml': '<define><name>foo</name><base>div</base><css>span {font-size: 12px;}</css><html><span>foo</span></html></define>' },
+    pages: { 'index.ghtml': '<foo />' },
+  });
+
+  process.env.debug = true;
+  build();
+  expect(fs.readFileSync('_site/stylesheet.css', 'utf8')).toBe('div.foo span{font-size:12px;}');
 });
