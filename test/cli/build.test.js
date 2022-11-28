@@ -86,5 +86,5 @@ it('handles multiple defines in the same file', () => {
   });
 
   build();
-  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body><div class="foo"><div class="children">bing</div><div class="bar">baz</div></div></body></html>')
+  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body><div class="foo"><div class="children">bing</div><div class="bar">baz</div></div></body></html>');
 });
