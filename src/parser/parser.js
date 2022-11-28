@@ -11,12 +11,12 @@ const options = {
   isArray: (name) => name === 'define',
   ignoreAttributes: false,
   preserveOrder: true,
-  unpairedTags: ['!DOCTYPE html', 'br', 'input', 'link'],
+  unpairedTags: ['!DOCTYPE html', 'br', 'input', 'link', 'children'],
   alwaysCreateTextNode: true,
   processEntities: false,
 };
 
-const parser = new XMLParser(options);
+const parser = new XMLParser(options, true);
 const builder = new XMLBuilder(options);
 
 class Parser {

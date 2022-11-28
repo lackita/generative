@@ -60,7 +60,31 @@ it('creates a stylesheet if any component rules exist', () => {
     pages: { 'index.ghtml': '<foo />' },
   });
 
-  process.env.debug = true;
   build();
   expect(fs.readFileSync('_site/stylesheet.css', 'utf8')).toBe('div.foo span{font-size:12px;}');
+});
+
+it('handles multiple defines in the same file', () => {
+  testdir({
+    components: {
+      'foo.ghtml': `
+        <define>
+          <name>foo</name>
+          <base>div</base>
+          <html><children><bar /></html>
+        </define>
+        <define>
+          <name>bar</name>
+          <base>div</base>
+          <html>baz</html>
+        </define>
+      `,
+    },
+    pages: {
+      'index.ghtml': '<foo>bing</foo>',
+    },
+  });
+
+  build();
+  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body><div class="foo"><div class="children">bing</div><div class="bar">baz</div></div></body></html>')
 });

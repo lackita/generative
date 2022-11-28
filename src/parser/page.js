@@ -18,12 +18,12 @@ class Page {
   }
 
   html (env) {
-    const [evaluated, new_env] = this.converted_tree(env);
-    return [builder.build(evaluated), new_env];
+    const [evaluated, newEnv] = this.converted_tree(env);
+    return [builder.build(evaluated), newEnv];
   }
 
   converted_tree (env) {
-    const [evaluated, new_env] = evaluate(this.parsedFile, env);
+    const [evaluated, newEnv] = evaluate(this.parsedFile, env);
     return [
       [
         new Doctype('html'),
@@ -52,7 +52,7 @@ class Page {
           ],
         ),
       ],
-      new_env,
+      newEnv,
     ];
   }
 }

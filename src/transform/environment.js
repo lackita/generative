@@ -30,7 +30,7 @@ class Environment {
   }
 
   addAllCSS (rules) {
-    if (rules.length == 0) return this;
+    if (rules.length === 0) return this;
     return this.addCSS(rules[0]).addAllCSS(rules.slice(1));
   }
 

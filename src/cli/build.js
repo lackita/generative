@@ -27,7 +27,10 @@ function parseDir (root, directories) {
     if (isDirectory(path.join(root, ...directories, file))) {
       return parseDir(root, directories.concat(file));
     } else {
-      return evaluate(new SourceFile(root, directories, file).parsed(), env)[1];
+      return evaluate(
+        new SourceFile(root, directories, file).parsed(),
+        env,
+      )[1];
     }
   }, new Environment());
 }
@@ -41,9 +44,9 @@ function buildDir (env, source, destination, directories) {
       const s = new SourceFile(source, directories, file);
       if (s.isGenerative()) {
         const d = DestinationFile.fromSource(destination, s);
-        const [html, new_env] = new Page(s.parsed()).html(env);
+        const [html, newEnv] = new Page(s.parsed()).html(env);
         d.write(html);
-        env = new_env;
+        env = newEnv;
       }
     }
   });

@@ -2,7 +2,7 @@
 
 const { Map } = require('immutable');
 const { Parser, Builder } = require('../../src/parser/parser.js');
-const { Text, CSS } = require('../../src/parser/element.js');
+const { Element, Text, CSS } = require('../../src/parser/element.js');
 const { Rule, Declaration } = require('../../src/parser/css.js');
 
 const p = new Parser();
@@ -40,6 +40,40 @@ describe('Parser', () => {
         [new Declaration('margin', '10px')],
       ),
     ]));
+  });
+
+  test('parses multiple defines separately', () => {
+    const parsed = p.parse('<define><name>foo</name></define><define><name>bar</name></define>');
+    expect(parsed).toStrictEqual(
+      new Element(
+        'root',
+        new Map(),
+        [
+          new Element(
+            'define',
+            new Map(),
+            [
+              new Element(
+                'name',
+                new Map(),
+                [new Text('foo')],
+              ),
+            ],
+          ),
+          new Element(
+            'define',
+            new Map(),
+            [
+              new Element(
+                'name',
+                new Map(),
+                [new Text('bar')],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   });
 });
 
