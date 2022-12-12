@@ -50,14 +50,18 @@ class Parser {
   }
 
   parseCSS (text) {
-    return new Style(css.parse(text).stylesheet.rules.map((r) => {
-      return new Rule(
-        r.selectors,
-        r.declarations.map((d) => {
-          return new Declaration(d.property, d.value);
+    return new Style(
+      css.parse(text).stylesheet.rules
+        .filter((r) => r.type === 'rule')
+        .map((r) => {
+          return new Rule(
+            r.selectors,
+            r.declarations
+              .filter((d) => d.type === 'declaration')
+              .map((d) => new Declaration(d.property, d.value)),
+          );
         }),
-      );
-    }));
+    );
   }
 
   collate_components (parsedCode) {

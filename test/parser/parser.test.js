@@ -77,3 +77,13 @@ describe('Builder', () => {
     expect(b.build([new Text('&check;')])).toBe('&check;');
   });
 });
+
+describe('parseCSS', () => {
+  it('handles comments at the top level', () => {
+    expect(p.parseCSS('/* p {} */').rules).toStrictEqual([]);
+  });
+
+  it('handles comments in a declaration', () => {
+    expect(p.parseCSS('p {/* a: b */}').rules[0].declarations).toStrictEqual([]);
+  });
+});
