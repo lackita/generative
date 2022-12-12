@@ -6,9 +6,10 @@ class Rule {
     this.declarations = declarations;
   }
 
-  scopedTo (scope) {
+  scopedTo (tagName, className) {
+    const scope = `${tagName}.${className}`;
     return new Rule(
-      this.selectors.map((s) => `${scope} ${s}`),
+      this.selectors.map((s) => className === s ? scope : `${scope} ${s}`),
       this.declarations,
     );
   }

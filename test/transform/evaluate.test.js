@@ -7,10 +7,10 @@ const { Element, Text } = require('../../src/parser/element.js');
 const Environment = require('../../src/transform/environment.js');
 const Pattern = require('../../src/transform/pattern.js');
 
-const define = new Element('define', new Map(), [
-  new Element('name', new Map(), [new Text('foo')]),
-  new Element('base', new Map(), [new Text('div')]),
-  new Element('html'),
+const define = new Element('define', [
+  new Element('name', [new Text('foo')]),
+  new Element('base', [new Text('div')]),
+  new Element('body'),
 ]);
 
 const emptyEnv = new Environment();
@@ -21,7 +21,7 @@ test('returns an environment with a symbol defined', () => {
 });
 
 test("defines a symbol when it's below a root element", () => {
-  const env = evaluate(new Element('root', new Map(), [define]), emptyEnv)[1];
+  const env = evaluate(new Element('root', [define]), emptyEnv)[1];
   expect(env.lookup('foo')).toBeTruthy();
 });
 
@@ -32,23 +32,23 @@ test('returns the parse tree', () => {
 
 test('replaces a defined element', () => {
   const r = evaluate(new Element('foo'), evaluate(define, emptyEnv)[1])[0];
-  expect(r).toStrictEqual(new Element('div', new Map([['class', 'foo']])));
+  expect(r).toStrictEqual(new Element('div', [], new Map([['class', 'foo']])));
 });
 
 test('keeps any child values with the children tag', () => {
   const p = new Pattern('foo', 'div', [
     new Element('children'),
   ]);
-  const e = new Element('foo', new Map(), [new Text('bar')]);
+  const e = new Element('foo', [new Text('bar')]);
   expect(evaluate(e, new Environment().register(p))[0]).toStrictEqual(
     new Element(
       'div',
-      new Map([['class', 'foo']]),
       [new Element(
         'div',
-        new Map([['class', 'children']]),
         e.children,
+        new Map([['class', 'children']]),
       )],
+      new Map([['class', 'foo']]),
     ),
   );
 });
@@ -57,6 +57,6 @@ test('does not have children as a registered pattern', () => {
   const p = new Pattern('foo', 'div', [
     new Element('children'),
   ]);
-  const e = new Element('foo', new Map(), [new Text('bar')]);
+  const e = new Element('foo', [new Text('bar')]);
   expect(evaluate(e, new Environment().register(p))[1].lookup('children')).toBe(undefined);
 });

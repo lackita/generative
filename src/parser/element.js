@@ -3,7 +3,7 @@
 const { Map } = require('immutable');
 
 class Element {
-  constructor (tag, attributes, children) {
+  constructor (tag, children, attributes) {
     this._tag = tag;
     this._attributes = Object.freeze(attributes || new Map());
     this._children = Object.freeze(children || []);
@@ -26,8 +26,8 @@ class Element {
 
     return new this.constructor(
       this.tag,
-      attributes,
       children,
+      attributes,
     );
   }
 
@@ -103,15 +103,19 @@ class Text extends Element {
   }
 }
 
-class CSS extends Element {
+class Style extends Element {
   constructor (rules) {
-    super('css');
+    super('style');
     this._rules = rules;
   }
 
   get rules () {
     return this._rules;
   }
+
+  clone () {
+    return new this.constructor(this.rules);
+  }
 }
 
-module.exports = { Element, Text, Doctype, CSS };
+module.exports = { Element, Text, Doctype, Style };

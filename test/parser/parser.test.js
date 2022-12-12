@@ -2,7 +2,7 @@
 
 const { Map } = require('immutable');
 const { Parser, Builder } = require('../../src/parser/parser.js');
-const { Element, Text, CSS } = require('../../src/parser/element.js');
+const { Element, Text, Style } = require('../../src/parser/element.js');
 const { Rule, Declaration } = require('../../src/parser/css.js');
 
 const p = new Parser();
@@ -34,7 +34,7 @@ describe('Parser', () => {
   });
 
   test('parses a css tag', () => {
-    expect(p.parse('<css>body { margin: 10px }</css>').children[0]).toStrictEqual(new CSS([
+    expect(p.parse('<style>body { margin: 10px }</style>').children[0]).toStrictEqual(new Style([
       new Rule(
         ['body'],
         [new Declaration('margin', '10px')],
@@ -47,26 +47,21 @@ describe('Parser', () => {
     expect(parsed).toStrictEqual(
       new Element(
         'root',
-        new Map(),
         [
           new Element(
             'define',
-            new Map(),
             [
               new Element(
                 'name',
-                new Map(),
                 [new Text('foo')],
               ),
             ],
           ),
           new Element(
             'define',
-            new Map(),
             [
               new Element(
                 'name',
-                new Map(),
                 [new Text('bar')],
               ),
             ],

@@ -6,10 +6,11 @@ function evaluate (parseTree, env) {
   let transformedTree;
   const pattern = env.lookup(parseTree.tag);
   if (pattern) {
-    [transformedTree] = evaluate(
+    [transformedTree, env] = evaluate(
       ...pattern.mutate(parseTree, env),
     );
-    env = env.addAllCSS(pattern.scopedCSS());
+    env = env.deregister('children')
+      .addAllCSS(pattern.scopedCSS());
   } else {
     const children = [];
     if (parseTree.tag === 'define') {

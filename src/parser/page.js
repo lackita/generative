@@ -23,31 +23,36 @@ class Page {
   }
 
   converted_tree (env) {
-    const [evaluated, newEnv] = evaluate(this.parsedFile, env);
+    let [evaluated, newEnv] = evaluate(this.parsedFile, env);
+    const head = evaluated.find('head');
+    const style = head && head.find('style');
+    if (style) {
+      newEnv = newEnv.addAllCSS(style.rules);
+    }
+
+    const body = evaluated.find('body');
     return [
       [
         new Doctype('html'),
         new Element(
           'html',
-          new Map(),
           [
             new Element(
               'head',
-              new Map(),
-              [
+              (head ? head.children.filter((e) => e.tag !== 'style') : []).concat([
                 new Element(
                   'link',
+                  [],
                   new Map({
                     rel: 'stylesheet',
                     href: 'stylesheet.css',
                   }),
                 ),
-              ],
+              ]),
             ),
             new Element(
               'body',
-              new Map(),
-              evaluated.children,
+              body ? body.children : [],
             ),
           ],
         ),

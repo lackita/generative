@@ -33,9 +33,13 @@ function initPages () {
   }
 
   if (!fs.existsSync('pages/index.ghtml')) {
-    fs.writeFileSync('pages/index.ghtml', `<introduction>
-  <p>Welcome to Generative!</p>
-</introduction>`);
+    fs.writeFileSync('pages/index.ghtml', `
+      <body>
+        <introduction>
+          <p>Welcome to Generative!</p>
+        </introduction>
+      </body>
+    `);
   }
 }
 
@@ -47,12 +51,15 @@ function initComponents () {
   }
 
   if (!fs.existsSync('components/introduction.ghtml')) {
-    fs.writeFileSync('components/introduction.ghtml', `<define>
-  <name>introduction</name>
-  <div>
-    <children />
-  </div>
-</define>`);
+    fs.writeFileSync('components/introduction.ghtml', `
+      <define>
+        <name>introduction</name>
+        <base>div</base>
+        <body>
+          <children />
+        </body>
+      </define>
+    `);
   }
 }
 

@@ -4,14 +4,14 @@ const { XMLParser, XMLBuilder } = require('fast-xml-parser');
 const { Map } = require('immutable');
 const css = require('css');
 
-const { Element, Text, CSS } = require('./element.js');
+const { Element, Text, Style } = require('./element.js');
 const { Rule, Declaration } = require('./css.js');
 
 const options = {
   isArray: (name) => name === 'define',
   ignoreAttributes: false,
   preserveOrder: true,
-  unpairedTags: ['!DOCTYPE html', 'br', 'input', 'link', 'children'],
+  unpairedTags: ['!DOCTYPE html', 'br', 'input', 'link', 'children', 'meta'],
   alwaysCreateTextNode: true,
   processEntities: false,
 };
@@ -38,19 +38,19 @@ class Parser {
 
     if (components.tag === '#text') {
       return new Text(components.children);
-    } else if (components.tag === 'css') {
+    } else if (components.tag === 'style') {
       return this.parseCSS(this.parse_elements(components.children)[0].value);
     } else {
       return new Element(
         components.tag,
-        components.attributes,
         this.parse_elements(components.children),
+        components.attributes,
       );
     }
   }
 
   parseCSS (text) {
-    return new CSS(css.parse(text).stylesheet.rules.map((r) => {
+    return new Style(css.parse(text).stylesheet.rules.map((r) => {
       return new Rule(
         r.selectors,
         r.declarations.map((d) => {

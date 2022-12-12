@@ -13,11 +13,12 @@ class Pattern {
   }
 
   static buildFrom (parseTree) {
-    const css = parseTree.find('css');
+    const head = parseTree.find('head');
+    const css = head && head.find('style');
     return new Pattern(
       parseTree.find('name').value(),
       parseTree.find('base').value(),
-      parseTree.find('html').children,
+      parseTree.find('body').children,
       css && css.rules,
     );
   }
@@ -35,7 +36,7 @@ class Pattern {
   }
 
   scopedCSS () {
-    return this.css.map((rule) => rule.scopedTo(`${this.base}.${this.name}`));
+    return this.css.map((rule) => rule.scopedTo(this.base, this.name));
   }
 
   get css () {
@@ -46,7 +47,11 @@ class Pattern {
     const children = [];
     this.html.forEach((e) => children.push(e.clone()));
 
-    const transformedTree = new Element(this.base, new Map([['class', this.name]]), children);
+    const transformedTree = new Element(
+      this.base,
+      children,
+      new Map([['class', this.name]]),
+    );
 
     return [
       transformedTree,

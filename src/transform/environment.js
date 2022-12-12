@@ -18,6 +18,13 @@ class Environment {
     );
   }
 
+  deregister (name) {
+    return new Environment(
+      this.symbols.delete(name),
+      this._css,
+    );
+  }
+
   merge (env) {
     return new Environment(
       this.symbols.merge(env.symbols),

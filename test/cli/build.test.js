@@ -12,7 +12,7 @@ test('empty directories', () => {
 test('parses pages', () => {
   testdir({
     components: [],
-    pages: { 'foo.ghtml': '<div>foo</div>' },
+    pages: { 'foo.ghtml': '<body><div>foo</div></body>' },
   });
   build();
   expect(fs.existsSync('_site/foo.html')).toBeTruthy();
@@ -21,7 +21,7 @@ test('parses pages', () => {
 test('clears existing directory', () => {
   testdir({
     components: [],
-    pages: { 'foo.ghtml': '<div>foo</div>' },
+    pages: { 'foo.ghtml': '<body><div>foo</div></body>' },
     _site: { 'bar.html': 'bad' },
   });
   build();
@@ -37,7 +37,7 @@ test('does not create files which are not ghtml', () => {
 test('creates a subdirectory with a file', () => {
   testdir({
     components: [],
-    pages: { foo: { 'bar.ghtml': 'hi' } },
+    pages: { foo: { 'bar.ghtml': '<body>hi</body>' } },
   });
   build();
   expect(fs.existsSync('_site/foo/bar.html')).toBeTruthy();
@@ -46,22 +46,22 @@ test('creates a subdirectory with a file', () => {
 test('builds a component', () => {
   testdir({
     components: {
-      'foo.ghtml': '<define><name>foo</name><base>div</base><html>bar</html></define>',
+      'foo.ghtml': '<define><name>foo</name><base>div</base><body>bar</body></define>',
     },
-    pages: { 'index.ghtml': '<foo />' },
+    pages: { 'index.ghtml': '<body><foo /></body>' },
   });
   build();
-  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body><div class="foo">bar</div></body></html>');
+  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe(pageHTML('<div class="foo">bar</div>'));
 });
 
 it('creates a stylesheet if any component rules exist', () => {
   testdir({
-    components: { 'foo.ghtml': '<define><name>foo</name><base>div</base><css>span {font-size: 12px;}</css><html><span>foo</span></html></define>' },
-    pages: { 'index.ghtml': '<foo />' },
+    components: { 'foo.ghtml': '<define><name>foo</name><base>div</base><head><style>span {font-size: 12px;}</style></head><body><span>foo</span></body></define>' },
+    pages: { 'index.ghtml': '<body><foo /></body>' },
   });
 
   build();
-  expect(fs.readFileSync('_site/stylesheet.css', 'utf8')).toBe('div.foo span{font-size:12px;}');
+  expect(fs.readFileSync('_site/stylesheet.css', 'utf8')).toBe('div.foo span{font-size:12px;}body{height:100vh;margin:0;}');
 });
 
 it('handles multiple defines in the same file', () => {
@@ -71,20 +71,24 @@ it('handles multiple defines in the same file', () => {
         <define>
           <name>foo</name>
           <base>div</base>
-          <html><children><bar /></html>
+          <body><children><bar /></body>
         </define>
         <define>
           <name>bar</name>
           <base>div</base>
-          <html>baz</html>
+          <body>baz</body>
         </define>
       `,
     },
     pages: {
-      'index.ghtml': '<foo>bing</foo>',
+      'index.ghtml': '<body><foo>bing</foo></body>',
     },
   });
 
   build();
-  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe('<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body><div class="foo"><div class="children">bing</div><div class="bar">baz</div></div></body></html>');
+  expect(fs.readFileSync('_site/index.html', 'utf8')).toBe(pageHTML('<div class="foo"><div class="children">bing</div><div class="bar">baz</div></div>'));
 });
+
+function pageHTML (content) {
+  return `<!DOCTYPE html><html><head><link rel="stylesheet" href="stylesheet.css"></head><body>${content}</body></html>`;
+}
