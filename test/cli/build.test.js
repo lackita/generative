@@ -61,7 +61,7 @@ it('creates a stylesheet if any component rules exist', () => {
   });
 
   build();
-  expect(fs.readFileSync('_site/stylesheet.css', 'utf8')).toBe('div.foo span{font-size:12px;}body{height:100vh;margin:0;}');
+  expect(fs.readFileSync('_site/stylesheet.css', 'utf8')).toBe('div.foo span{font-size:12px;}');
 });
 
 it('handles multiple defines in the same file', () => {

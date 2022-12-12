@@ -12,5 +12,5 @@ it('returns a rule with a declaration', () => {
       [new Declaration('font-size', '12px')],
     ),
   ]]));
-  expect(s.css()).toBe('div.foo{font-size:12px;}body{height:100vh;margin:0;}');
+  expect(s.css()).toBe('div.foo{font-size:12px;}');
 });
