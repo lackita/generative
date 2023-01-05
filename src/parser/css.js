@@ -14,6 +14,10 @@ class Rule {
     );
   }
 
+  convertUsing (env) {
+    return this;
+  }
+
   ast () {
     return {
       type: 'rule',

@@ -21,6 +21,14 @@ class File {
   path () {
     return path.join(this.root, ...this.directories, this.file);
   }
+
+  filename () {
+    return this.file.split('.')[0];
+  }
+
+  extension () {
+    return this.file.split('.')[1];
+  }
 }
 
 class SourceFile extends File {
@@ -35,13 +43,10 @@ class SourceFile extends File {
 
 class DestinationFile extends File {
   static fromSource (destination, file) {
-    const match = file.isGenerative();
-    if (!match) throw new Error('not generative');
-
     return new DestinationFile(
       destination,
       file.directories,
-      `${match[1]}.html`,
+      `${file.filename()}.${file.isGenerative() ? 'html' : file.extension()}`,
     );
   }
 

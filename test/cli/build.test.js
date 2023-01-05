@@ -28,12 +28,6 @@ test('clears existing directory', () => {
   expect(fs.existsSync('_site/bar.html')).toBeFalsy();
 });
 
-test('does not create files which are not ghtml', () => {
-  testdir({ components: [], pages: { 'foo.html': 'hi' } });
-  build();
-  expect(fs.existsSync('_site/foo.html')).toBeFalsy();
-});
-
 test('creates a subdirectory with a file', () => {
   testdir({
     components: [],
@@ -87,6 +81,17 @@ it('handles multiple defines in the same file', () => {
 
   build();
   expect(fs.readFileSync('_site/index.html', 'utf8')).toBe(pageHTML('<div class="foo"><div class="children">bing</div><div class="bar">baz</div></div>'));
+});
+
+it('copies non-ghtml files directly', () => {
+  testdir({
+    pages: {
+      'foo.txt': 'this',
+    },
+  });
+
+  build();
+  expect(fs.readFileSync('_site/foo.txt', 'utf8')).toBe('this');
 });
 
 function pageHTML (content) {

@@ -11,7 +11,9 @@ const Environment = require('../transform/environment.js');
 
 function build () {
   if (fs.existsSync('_site')) fs.rmSync('_site', { recursive: true });
-  const env = parseDir('components', []);
+
+  let env = new Environment();
+  if (fs.existsSync('components')) env = parseDir('components', []);
 
   (new DestinationFile('_site', [], 'stylesheet.css')).write(
     (new Stylesheet(
@@ -42,11 +44,13 @@ function buildDir (env, source, destination, directories) {
       env = buildDir(env, source, destination, directories.concat(file));
     } else {
       const s = new SourceFile(source, directories, file);
+      const d = DestinationFile.fromSource(destination, s);
       if (s.isGenerative()) {
-        const d = DestinationFile.fromSource(destination, s);
         const [html, newEnv] = new Page(s.parsed()).html(env);
         d.write(html);
         env = newEnv;
+      } else {
+        fs.copyFileSync(s.path(), d.path());
       }
     }
   });

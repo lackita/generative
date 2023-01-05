@@ -1,5 +1,10 @@
 # Generative
 
+NOTE: After beginning this project, I learned that
+[Svelte](https://svelte.dev/) had already built the thing I wanted. If
+you're interested in what I was going for here, check them out!
+
+
 Generative is a new way of constructing HTML. This is just the start
 of the project at this point, though, so here are the project goals:
 
